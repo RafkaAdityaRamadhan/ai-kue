@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <title>TOKO KUE MANIZZ</title>
+  <meta charset="UTF-8">
+  <title>Cake Manizz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff8f0;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    img.logo {
+      width: 120px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      color: #b14b4b;
+    }
+    .produk-card {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 10px;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 180px;
+      padding: 10px;
+      text-align: center;
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .card h4 {
+      margin: 8px 0 5px;
+    }
+    .card p {
+      margin: 3px 0;
+      font-size: 14px;
+    }
+    #chat {
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: left;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-height: 200px;
+      overflow-y: auto;
+    }
+    .bot, .user {
+      margin-bottom: 10px;
+    }
+    .bot strong { color: green; }
+    .user strong { color: blue; }
+
+    .input-area {
+      margin-top: 10px;
+    }
+    input {
+      padding: 8px;
+      width: 70%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 8px 12px;
+      border: none;
+      background: #b14b4b;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="ai.png" alt="Logo Cake Manizz" class="logo">
+  <h1>Selamat Datang di Cake Manizz 🎂</h1>
+
+  <div id="chat">
+    <div class="bot"><strong>Bot:</strong> Hai! Silakan tanya tentang produk, harga, atau stok ya 😊</div>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Tulis pertanyaan...">
+    <button onclick="sendMessage()">Kirim</button>
+  </div>
+
+  <script>
+    const produk = [
+      { nama: "Kue Coklat", harga: 20000, stok: 10, gambar: "kue1.jpg" },
+      { nama: "Kue Rainbow", harga: 25000, stok: 10, gambar: "kue2.jpg" },
+      { nama: "Kue Vanilla", harga: 18000, stok: 10, gambar: "kue3.jpg" },
+    ];
+
+    function sendMessage() {
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (text === '') return;
+
+      appendMessage("Anda", text, "user");
+      getBotResponse(text.toLowerCase());
+
+      input.value = '';
+    }
+
+    function appendMessage(sender, message, cls) {
+      const chat = document.getElementById('chat');
+      chat.innerHTML += `<div class="${cls}"><strong>${sender}:</strong> ${message}</div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function getBotResponse(text) {
+      const chat = document.getElementById('chat');
+
+      if (["produk", "kue" , "daftar produk" , "harga" , "list"].some(k => text.includes(k))) {
+        appendMessage("Bot", "Berikut produk kami:", "bot");
+
+        let produkHTML = '<div class="produk-card">';
+        for (let p of produk) {
+          produkHTML += `
+            <div class="card">
+              <img src="${p.gambar}" alt="${p.nama}">
+              <h4>${p.nama}</h4>
+              <p>Harga: Rp${p.harga.toLocaleString()}</p>
+              <p>Stok: ${p.stok > 0 ? p.stok + " pcs" : "Habis"}</p>
+            </div>
+          `;
+        }
+        
+        produkHTML += '</div>';
+
+        chat.innerHTML += produkHTML;
+        chat.scrollTop = chat.scrollHeight;
+        return;
+      }
+
+      if (["hai", "halo", "hello", "pagi", "siang", "sore"].some(k => text.includes(k))) {
+        appendMessage("Bot", "Halo juga! Ada yang bisa saya bantu?", "bot");
+        return;
+      }
+
+      if (["stok", "ada", "ketersediaan"].some(k => text.includes(k))) {
+        appendMessage("Bot", "Stok kami bervariasi, silakan cek produk yang ada.", "bot");
+        return;
+      }
+      if (["beli" , "peesan"].some(k => text.includes(k))) {
+        appendMessage("Bot", "Oke baik silahkan transfer ke payment dan mohon di tunggu", "bot");
+        return;
+      }
+      if (["payment" , "metode"].some(k => text.includes(k))) {
+        appendMessage("Bot", "Dana:0895xxxxx Gopay:0985xxxxxx Qris:Belum tersedia", "bot");
+        return;
+      }
+
+      appendMessage("Bot", "Maaf, saya belum mengerti. Bisa tanya soal produk, harga, atau stok ya.", "bot");
+    }
+    
+  </script>
+
+</body>
+</html>
